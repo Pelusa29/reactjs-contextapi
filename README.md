@@ -1,25 +1,15 @@
-##Índice
+<p align="center">
+    <img width="350" src="IMG/gitCracken.png">
+</p>
+<div align="center">
+<img alt="Static Badge" src="https://img.shields.io/badge/Reactjs-v18.3.1-blue?style=flat-square&logo=React&logoColor=blue&color=%23fffffff">
 
-\*[Título e imagen de portada](#Título-e-imagen-de-portada)
+<img alt="Static Badge" src="https://img.shields.io/badge/Docker-v?style=plastic&logo=Docker&logoColor=blue&color=%23ffffff">
+<img alt="Static Badge" src="https://img.shields.io/badge/Github-black?style=flat-square&logo=Github&logoColor=blue&color=%23dddd">
+</div>
 
-\*[Insignias](#insignias)
 
-\*[Índice](#índice)
+# ContextAPI - CRUD
 
-\*[Descripción del proyecto](#descripción-del-proyecto)
+## Description
 
-\*[Estado del proyecto](#Estado-del-proyecto)
-
-\*[Características de la aplicación y demostración](#Características-de-la-aplicación-y-demostración)
-
-\*[Acceso al proyecto](#acceso-proyecto)
-
-\*[Tecnologías utilizadas](#tecnologías-utilizadas)
-
-\*[Personas Contribuyentes](#personas-contribuyentes)
-
-\*[Personas-Desarrolladores del Proyecto](#personas-desarrolladores)
-
-- [Licencia](#licencia)
-
-\*[Conclusión](#conclusión)
