@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - '${PORT}:${PORT}'
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URL=${MONGO_URL}
+      - PORT=${PORT}
+      - NODE_ENV=${NODE_ENV}
+      - CLOUDINARY_NAME=${CLOUDINARY_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  mongo:
+      image: mongo
+      ports: 
+        - 27017:27017
+      volumes:
+        - mongo_data:/data/db
+        
+volumes:
+  mongo_data:
