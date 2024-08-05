@@ -4,8 +4,12 @@ import fs from 'fs-extra'
 
 //#region Posts
 export const getPost = async (req, res) => {
-    const allPosts = await Post.find()
-    res.send(allPosts)
+    try {
+        const allPosts = await Post.find({ user: req.user.id })
+        res.status(200).json(allPosts)
+    } catch (error) {
+        res.status(400).json({ message: error.message })
+    }
 }
 //#endregion
 
@@ -28,7 +32,7 @@ export const creaPost = async (req, res) => {
             await fs.remove(req.files.image.tempFilePath)
         }
 
-        const newPost = new Post({ title, description, image })
+        const newPost = new Post({ title, description, image, user: req.user.id })
         await newPost.save()
             .then(task => {
                 res.status(201).json({
@@ -45,16 +49,34 @@ export const creaPost = async (req, res) => {
 
 //#region Update Post
 export const updatePost = async (req, res) => {
+    const { title, description } = req.body
+
     try {
-        const { title, description } = req.body
+        const post = await Post.findOne({ _id: req.params.id, user: req.user.id })
+        if (!post) return res.status(404).json({ message: 'Post not found' })
+        let image = {}
+        let image_old = null
+        // If a new Image is uploaded, remove it from the list of images
+        if (req.files.image) {
+
+            const globalUrl = await uploadImage(req.files.image.tempFilePath)
+            image = {
+                url: globalUrl.secure_url,
+                public_id: globalUrl.public_id
+            }
+            //Delete the image from the filesystem
+            if (post.image?.public_id) {
+                await deleteImage(post.image.public_id)
+            }
+            await fs.remove(req.files.image.tempFilePath)
+        }
+
         const updatedPost = await Post.findByIdAndUpdate(
             req.params.id,
-            req.body,
+            { title, description, image },
             { new: true }
         )
-        if (!updatedPost) return res.status(404).json({ message: 'Post not found' })
-
-        res.status(200).json({ message: 'Post Updated', updatedPost })
+        res.status(200).json({ message: 'Post updated successfully', updatedPost })
     } catch (error) {
         res.status(400).json({ message: error.message })
     }
