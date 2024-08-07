@@ -12,8 +12,10 @@ import postRoutes from './routes/post.routes.js'
 const app = express()
 
 app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true
+    origin: 'http://localhost:3000',
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 }))
 
 // Bodyparser middleware to parse JSON and URL-encoded data

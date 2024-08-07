@@ -3,6 +3,8 @@ import { createContext, useState, useContext, useEffect } from "react";
 //Import API request from auth.js
 import { registerUserRequestAPI, verifyTokenRequestAPI, loginUserRequestAPI, logoutUserRequestAPI } from '../api/auth'
 import Cookies from 'js-cookie'
+import { useCallback } from 'react';
+const URL = "http://openlibrary.org/search.json?title="
 
 
 export const AuthContext = createContext()
@@ -21,6 +23,11 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true) /* Estado loading inicializado en true */
     const [errors, setErrors] = useState([]) /*Estado error inicializado en null */
     const [isAuthenticated, setIsAuthenticated] = useState(false) /*Estado isAuthenticated inicializado en false */
+
+    //Apply just for book
+    const [searchTerm, setSearchTerm] = useState("the lost world");
+    const [books, setBooks] = useState([]);
+    const [resultTitle, setResultTitle] = useState("");
 
     const regUser = async (user) => {
         try {
@@ -69,6 +76,49 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    /* init Book  functionality */
+    const fetchBooks = useCallback(async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(`${URL}${searchTerm}`);
+            const data = await response.json();
+            const { docs } = data;
+
+            if (docs) {
+                const newBooks = docs.slice(0, 20).map((bookSingle) => {
+                    const { key, author_name, cover_i, edition_count, first_publish_year, title } = bookSingle;
+
+                    return {
+                        id: key,
+                        author: author_name,
+                        cover_id: cover_i,
+                        edition_count: edition_count,
+                        first_publish_year: first_publish_year,
+                        title: title
+                    }
+                });
+
+                setBooks(newBooks);
+
+                if (newBooks.length > 1) {
+                    setResultTitle("Your Search Result");
+                } else {
+                    setResultTitle("No Search Result Found!")
+                }
+            } else {
+                setBooks([])
+                setResultTitle("No Search Result Found!");
+            }
+            setLoading(false)
+        } catch (error) {
+            console.log(error)
+            setLoading(false)
+        }
+    }, [searchTerm]);
+
+
+    /* End Book */
+
     //Delete errors after 5 seconds
     useEffect(() => {
         console.log(errors)
@@ -79,6 +129,10 @@ export const AuthProvider = ({ children }) => {
             return () => clearTimeout(timer)
         }
     }, [errors])
+
+    useEffect(() => {
+        fetchBooks();
+    }, [searchTerm, fetchBooks])
 
     //UssEffect to check if user is authenticated
     useEffect(() => {
@@ -135,7 +189,8 @@ export const AuthProvider = ({ children }) => {
                 loading,
                 user,
                 isAuthenticated,
-                errors
+                errors,
+                books, setSearchTerm, resultTitle, setResultTitle
             }}>
             {children}
         </AuthContext.Provider>

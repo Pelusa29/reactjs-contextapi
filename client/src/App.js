@@ -4,7 +4,8 @@ import {
   NotFound,
   LoginPage,
   RegisterPage,
-  PageBooks
+  PageBooks,
+  BookList
 
 } from "./pages/index"
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
@@ -27,6 +28,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/mybooks" element={<PageBooks />} />
+              <Route path="/book" element={<BookList />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
