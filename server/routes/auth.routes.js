@@ -4,6 +4,7 @@ import {
     register,
     logout,
     login,
+    verifyToken
 } from '../controllers/auth.controller.js'
 import { authRequired } from '../helpers/validateToken.js';
 import { registerSchema, loginSchema } from '../schemas/auth.js'
@@ -17,7 +18,7 @@ router.post('/register', validateRes(registerSchema), register)
 router.post('/login', validateRes(loginSchema), login)
 router.post('/logout', logout)
 
-//router.get('/verify-token', verifyToken)
+router.get('/verify-token', verifyToken)
 //#endregion
 
 
