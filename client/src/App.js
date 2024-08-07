@@ -1,21 +1,37 @@
-import { HomePage, PostForm, NotFound, LoginPage, RegisterPage } from "./pages/index"
-import { Routes, Route } from 'react-router-dom'
+import {
+  HomePage,
+  PostForm,
+  NotFound,
+  LoginPage,
+  RegisterPage,
+  PageBooks
+
+} from "./pages/index"
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import { PostContainer } from "./context/postContext"
+import { AuthProvider } from './context/AuthContext'
+
+import { ProtectedRoute } from './ProtectedRoute'
+
+import { Header } from "./components/Header/Header"
 
 function App() {
   return (
-    <div className="bg-neutral-200 min-h-screen flex items-center">
-      <div className="px-10 container m-auto">
-        <PostContainer>
+    <div className="App">
+      <AuthProvider>
+        <Header />
+        <div className="bg-indigo-500 w-full h-screen">
           <Routes>
+            <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/" element={<HomePage />} />
-            <Route path="/new" element={<PostForm />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/mybooks" element={<PageBooks />} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </PostContainer>
-      </div>
+        </div>
+      </AuthProvider>
     </div>
   )
 }
